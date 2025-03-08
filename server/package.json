@@ -19,9 +19,12 @@
     "@types/node": "^20.14.11",
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.4",
+    "prisma": "^6.4.1",
+    "tsx": "^4.19.3",
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@prisma/extension-accelerate": "^1.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
