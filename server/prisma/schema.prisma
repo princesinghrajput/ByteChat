@@ -22,4 +22,7 @@ model User {
   oauth_id  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
+
