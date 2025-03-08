@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Env from '@/lib/env';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -17,6 +18,13 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
+
+  const handleLogin=() =>{
+    signIn("google", {
+      redirect: true,
+      callbackUrl: "/dashboard",
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,7 +144,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             <button
-              onClick={() => signIn('google')}
+              onClick={handleLogin}
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
             >
               <span className="sr-only">Sign in with Google</span>
