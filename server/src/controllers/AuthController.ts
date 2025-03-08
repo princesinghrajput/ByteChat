@@ -12,10 +12,16 @@ interface LoginPayloadBody {
 
 class AuthController {
     static async login(req: Request, res: Response) {
-        const { email, password } = req.body;
-
-        try{
+        try {
+            console.log('Login request received:', req.body);
             const body: LoginPayloadBody = req.body;
+            
+            if (!body.email || !body.oauth_id) {
+                console.log('Missing required fields');
+                return res.status(400).json({
+                    message: "Email and oauth_id are required"
+                });
+            }
 
             let findUser = await prisma.user.findUnique({
                 where: {
@@ -23,9 +29,16 @@ class AuthController {
                 },
             });
 
-            if(!findUser){
-                return res.status(404).json({
-                    message: "User not found",
+            // If user doesn't exist, create them
+            if (!findUser) {
+                findUser = await prisma.user.create({
+                    data: {
+                        email: body.email,
+                        name: body.name,
+                        provider: body.provider,
+                        image: body.image,
+                        oauth_id: body.oauth_id
+                    }
                 });
             }
 
@@ -35,22 +48,23 @@ class AuthController {
                 oauth_id: findUser.oauth_id,
             }
 
-            let token = jwt.sign(JWTPayload, process.env.JWT_SECRET, {
+            let token = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
                 expiresIn: "365d",
             });
 
             return res.status(200).json({
-                message: "Login successfully",
-               user:{
-                ...findUser,
-                token: token,
-               },
+                message: "Login successful",
+                user: {
+                    ...findUser,
+                    token: token,
+                },
             });
 
-        }catch(error){
-            console.log(error);
+        } catch (error) {
+            console.error("Login error:", error);
             return res.status(500).json({
                 message: "Something went wrong. Please try again later.",
+                error: error.message
             });
         }
     }
