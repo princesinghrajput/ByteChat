@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,20 +14,20 @@ import {
 import { signOut } from "next-auth/react";
 
 const handleLogout = () => {
-  signOut();
+  signOut({
+    redirect: true,
+    callbackUrl: '/',
+  });
 };
 
-function LogoutModal() {
+function LogoutModal({open, setOpen}: {open: boolean, setOpen: Dispatch<SetStateAction<boolean>>}) {
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger>Open</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
-          {/* <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription> */}
+          <AlertDialogDescription>This action cannot be undone. You will be logged out of your account.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
