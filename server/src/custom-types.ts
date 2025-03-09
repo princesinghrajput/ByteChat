@@ -4,6 +4,7 @@ export interface AuthUser {
     id: number;
     email: string;
     name: string;
+    oauth_id: string;
 }
 
 export interface AuthRequest extends Request {

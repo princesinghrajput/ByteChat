@@ -42,13 +42,16 @@ class AuthController {
                 });
             }
 
-            let JWTPayload = {
-                name: findUser.name,
+            const JWTPayload = {
+                id: findUser.id,
+                name: findUser.name || '',
                 email: findUser.email,
-                oauth_id: findUser.oauth_id,
-            }
+                oauth_id: findUser.oauth_id
+            };
 
-            let token = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
+            console.log('Creating JWT with payload:', JWTPayload); // Add this for debugging
+
+            const token = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
                 expiresIn: "365d",
             });
 
