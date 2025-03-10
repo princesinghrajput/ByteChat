@@ -5,7 +5,19 @@ const app: Application = express();
 const PORT = process.env.PORT || 7000;
 import Routes from "./routes/index.js";
 
+import {Server} from "socket.io";
+import { createServer } from "http";
+import { setupSocket } from "./socket.js";
 
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+setupSocket(io);
+export { io };
 // * Middleware
 // Log all incoming requests for debugging
 app.use((req, res, next) => {
@@ -33,6 +45,6 @@ app.get("/", (req: Request, res: Response) => {
   return res.send("It's working 🙌");
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
